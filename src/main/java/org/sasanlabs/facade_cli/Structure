@@ -1,0 +1,148 @@
+facade-cli/
+├── pom.xml
+├── compose.yaml                           # optional: runs everything together
+│
+├── ui/                                    # Tambo React app (separate project)
+│   ├── package.json
+│   └── src/
+│       ├── components/                    # components Tambo can render
+│       ├── tools/                         # functions that call the api/ endpoints
+│       └── App.tsx
+│
+├── src/main/java/org/sasanlabs/facade_cli/
+│   │
+│   ├── Application.java
+│   │
+│   ├── cli/                               # ONLY command definitions, no logic
+│   │   ├── RootCommand.java               # vapp ...
+│   │   ├── docker/                        # vapp docker ...
+│   │   │   ├── DockerCommand.java
+│   │   │   ├── UpCommand.java
+│   │   │   ├── DownCommand.java
+│   │   │   ├── StatusCommand.java
+│   │   │   └── LogsCommand.java
+│   │   ├── vuln/                          # vapp vuln ...
+│   │   │   ├── VulnCommand.java
+│   │   │   ├── ListCommand.java
+│   │   │   ├── InfoCommand.java
+│   │   │   └── RunCommand.java
+│   │   └── target/                        # vapp target ...
+│   │       ├── TargetCommand.java
+│   │       └── ListCommand.java
+│   │
+│   ├── api/                               # REST endpoints for the Tambo UI
+│   │   ├── DockerController.java
+│   │   ├── VulnerabilityController.java
+│   │   ├── TargetController.java
+│   │   └── ApiExceptionHandler.java       # turns errors into JSON error responses
+│   │
+│   ├── service/                           # the real work; used by cli/ AND api/
+│   │   ├── VulnerabilityService.java
+│   │   ├── TargetService.java
+│   │   └── DockerManagementService.java
+│   │
+│   ├── core/                              # shared vocabulary + contracts
+│   │   ├── model/
+│   │   │   ├── VulnerabilityType.java
+│   │   │   ├── Variant.java
+│   │   │   ├── Endpoint.java
+│   │   │   ├── SecurityLevel.java
+│   │   │   └── Result.java
+│   │   ├── spi/
+│   │   │   ├── VulnerabilityModule.java
+│   │   │   └── TargetProvider.java
+│   │   └── registry/
+│   │       ├── VulnerabilityRegistry.java
+│   │       └── TargetRegistry.java
+│   │
+│   ├── dto/                               # Jackson classes (JSON in/out)
+│   │   ├── request/
+│   │   │   ├── RunVulnerabilityRequest.java
+│   │   │   └── DockerActionRequest.java
+│   │   ├── response/
+│   │   │   ├── VulnerabilityListResponse.java
+│   │   │   ├── RunResultResponse.java
+│   │   │   ├── TargetStatusResponse.java
+│   │   │   ├── DockerStatusResponse.java
+│   │   │   └── ErrorResponse.java
+│   │   └── external/                      # mirrors JSON from backends
+│   │       ├── vulnerableapp/
+│   │       └── mailpit/
+│   │
+│   ├── mapper/                            # dto <-> core model conversion
+│   │   └── ResultMapper.java
+│   │
+│   ├── vulnerabilities/                   # one package per vulnerability
+│   │   ├── jwt/
+│   │   │   └── JwtModule.java
+│   │   ├── command-injection/
+│   │   ├── crypto/
+│   │   ├── file-upload/
+│   │   ├── path-traversal/
+│   │   ├── sqli/
+│   │   │   ├── SqliModule.java
+│   │   │   ├── ErrorBasedSqli.java
+│   │   │   ├── UnionBasedSqli.java
+│   │   │   └── BlindSqli.java
+│   │   ├── xss/                           # persistent, reflected
+│   │   ├── xxe/
+│   │   ├── open redirect/
+│   │   ├── ssrf/
+│   │   ├── idor/
+│   │   ├── clickjacking/
+│   │   ├── ldapinjection/
+│   │   ├── authentication/
+│   │   └── password-reset/
+│   │
+│   ├── targets/                           # one package per backend
+│   │   ├── java/
+│   │   │   ├── JavaTarget.java
+│   │   │   └── JavaEndpointMapper.java
+│   │   ├── php/
+│   │   ├── jsp/
+│   │   ├── mailpit/
+│   │   │   ├── MailpitTarget.java
+│   │   │   └── MailpitClient.java
+│   │   └── mlforge/
+│   │
+│   ├── docker/                            # docker logic
+│   │   ├── DockerService.java
+│   │   ├── ComposeRunner.java
+│   │   └── ServiceDefinition.java
+│   │
+│   ├── http/                              # shared HTTP plumbing
+│   │   ├── HttpClientFactory.java
+│   │   └── RequestExecutor.java
+│   │
+│   ├── config/
+│   │   ├── FacadeProperties.java          # binds application.yaml
+│   │   ├── BeanConfig.java
+│   │   └── JacksonConfig.java             # shared ObjectMapper settings
+│   │
+│   └── util/
+│       └── (terminal output, table formatting, etc.)
+│
+├── src/main/resources/
+│   ├── application.yaml                   # ports, base URLs, default target
+│   ├── docker/
+│   │   ├── java/compose.yaml
+│   │   ├── php/compose.yaml
+│   │   ├── jsp/compose.yaml
+│   │   ├── mailpit/compose.yaml
+│   │   └── ml-forge/compose.yaml
+│   └── endpoints/                         # endpoint metadata as data, not code
+│       ├── java/
+│       │   ├── jwt.yaml
+│       │   ├── sqli.yaml
+│       │   └── ...
+│       ├── php/
+│       └── jsp/
+│
+└── src/test/java/org/sasanlabs/facade_cli/   # mirror main
+    ├── cli/
+    ├── api/
+    ├── service/
+    ├── vulnerabilities/
+    ├── targets/
+    ├── dto/                               # test JSON <-> class conversion
+    └── docker/

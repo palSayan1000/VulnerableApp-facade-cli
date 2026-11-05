@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: facade-cli
+
+  main:
+    banner-mode: console
+
+  output:
+    ansi:
+      enabled: always
+
+  docker:
+    compose:
+      file: compose.yaml
+      enabled: false
+
+  shell:
+    command:
+      clear:
+        enabled: false
+      history:
+        enabled: false
+      script:
+        enabled: false
+      version:
+        enabled: false
+
+logging:
+  file:
+    name: facade-cli-application.log
+
+  level:
+    root: info
+    org.sasanlabs: debug
+
+  console:
+    enabled: false
+
+  include-application-name: true
+
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 7
+      total-size-cap: 100MB
+      clean-history-on-start: true
