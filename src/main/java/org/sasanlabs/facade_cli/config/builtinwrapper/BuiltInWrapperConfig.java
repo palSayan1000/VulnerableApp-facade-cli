@@ -1,10 +1,13 @@
-package org.sasanlabs.facade_cli.command_line_interface.builtInWrapper;
+package org.sasanlabs.facade_cli.config.builtinwrapper;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.shell.core.command.Clear;
+import org.springframework.shell.core.command.CommandRegistry;
+import org.springframework.shell.core.command.Script;
+import org.springframework.shell.core.command.Version;
 import org.springframework.shell.jline.command.History;
-import org.springframework.shell.core.command.*;
 
 /**
  * Registers Spring Shell's built-in commands as beans so they can be injected into
@@ -24,6 +27,9 @@ public class BuiltInWrapperConfig {
     }
 
     /**
+     * {@code @Lazy} is used on the registry to avoid a circular dependency, because the
+     * registry itself contains the commands that depend on this bean.
+     *
      * @param commandRegistry the registry {@link Script} uses to look up and run the
      *                        commands listed in a script file
      * @return the built-in {@link Script} command bean
